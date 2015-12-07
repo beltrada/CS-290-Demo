@@ -1,0 +1,87 @@
+                Add an element to the table: 
+
+                Name: <input id = "name" type = "text"> 
+
+                # of reps: <input id = "reps" type = "number"> 
+
+                Weight: <input id = "weight" type = "number"> 
+
+                Date: <input id = "date" type = "date"> 
+
+                In lbs?: <input id = "lbs" type = "number"> 
+
+                <button id="addRow" type="button">Add Row</button>
+
+                <table id = table>
+                <thead>
+                <tr>  <th> Name <th> Reps <th> Weight <th> Date <th> In lbs? </tr>
+                </thead>
+                <tbody id=tableBody>
+                </tbody>
+                </table>
+
+<script>
+function insert(){
+        var req = new XMLHttpRequest();
+
+        var name = document.getElementById("name").value;
+        var reps = document.getElementById("reps").value;
+        var weight = document.getElementById("weight").value;
+        var date = document.getElementById("date").value;
+        var lbs = document.getElementById("lbs").value;
+        req.open("GET", "http://52.89.74.165:3000/insert?name=" + name + "&reps=" + reps + "&weight=" + weight + "&date=" + date + "&lbs=" + lbs, true);
+        req.setRequestHeader("Content-type", "application/json");
+        req.addEventListener("load", function(){
+                console.log("done: ", req.status);
+                        });
+
+        var table = document.getElementById("tableBody");
+        table.innerHTML = "";
+
+        var req2 = new XMLHttpRequest();
+        req2.open("GET", "http://52.89.74.165:3000/get-data", true);
+        req2.setRequestHeader("Content-type", "application/json");
+        req2.addEventListener("load", function(){
+                console.log("done: ", req.status);
+                        });
+
+        var exercises = JSON.parse(req2.responseText);
+        console.log(exercises);
+
+for(int i=0; i<exercises.length; i++){
+        var workout = exercises[i];
+        var row = table.insertRow(-1);
+        var nameCell = row.insertCell(0);
+        nameCell.innerHTML = workout.name;
+        var repsCell = row.insertCell(1);
+        repsCell.innerHTML = workout.reps;
+        var weightCell = row.insertCell(2);
+        weightCell.innerHTML = workout.weight;
+        var dateCell = row.insertCell(3);
+        dateCell.innerHTML = workout.date;
+        var lbsCell = row.insertCell(4);
+        if(workout.lbs == 0)
+                lbsCell.innerHTML = "Weight in kilos";
+        else
+                lbsCell.innerHTML = "Weight in lbs";
+
+        var editButton = row.insertCell(5);
+        var btn1 = document.createElement("BUTTON");
+        var edt = document.createTextNode("Edit");
+        btn1.appendChild(edt);
+        editButton.appendChild(btn1);
+
+        var deleteButton = row.insertCell(6);
+        var btn2 = document.createElement("BUTTON");
+        var del = document.createTextNode("Delete");
+        btn2.appendChild(del);
+        deleteButton.appendChild(btn2);
+}
+
+        req.send(null);
+        req2.send(null);
+}
+
+document.getElementById("addRow").addEventListener("click", insert);
+
+</script>

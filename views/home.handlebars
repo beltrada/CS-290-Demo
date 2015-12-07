@@ -1,0 +1,61 @@
+                Add an element to the table: 
+
+                Name: <input id = "name" type = "text"> 
+
+                # of reps: <input id = "reps" type = "number"> 
+
+                Weight: <input id = "weight" type = "number"> 
+
+                Date: <input id = "date" type = "date"> 
+
+                In lbs?: <input id = "lbs" type = "number"> 
+
+                <button id="addRow" type="button">Add Row</button>
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Reps</th>
+            <th>Weight</th>
+            <th>Date</th>
+            <th>Lbs/Kgs</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each results}}
+        <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.reps}}</td>
+            <td>{{this.weight}}</td>
+            <td>{{this.date}}</td>
+            <td>{{this.lbs}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+
+<script>
+function insert(){
+        var req = new XMLHttpRequest();
+
+        var name = document.getElementById("name").value;
+        var reps = document.getElementById("reps").value;
+        var weight = document.getElementById("weight").value;
+        var date = document.getElementById("date").value;
+        var lbs = document.getElementById("lbs").value;
+
+        req.open("GET", "http://52.89.74.165:3000/insert?name=" + name + "&reps=" + reps + "&weight=" + weight + "&date=" + date + "&lbs=" + lbs, true);
+        req.setRequestHeader("Content-type", "application/json");
+        req.addEventListener("load", function(){
+                console.log("done: ", req.status);
+                        });
+        req.send(null);
+
+}
+
+document.getElementById("addRow").addEventListener("click", insert);
+
+</script>
